@@ -12,7 +12,11 @@ public class App {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         // Make an HTTP request to get the top 250 movies
+        // imDB api system is down
+//        final String apiAccessToken = Dotenv.load().get("API_ACCESS_TOKEN");
+//        String url = "https://imdb-api.com/en/API/MostPopularMovies/" + apiAccessToken;
 
+        // alternative url provided by an Alura instructor, Jacqueline Oliveira
         final String url = Dotenv.load().get("API_ACCESS_URL");
 
         var client = HttpClient.newHttpClient();
@@ -21,13 +25,17 @@ public class App {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
 
-        List<Map<String, String>> moviesList = new JsonParser().parse(response);
-
         // Show data
+        List<Map<String, String>> moviesList = new JsonParser().parse(response);
         for (Map<String, String> movie : moviesList) {
-            System.out.printf("{\n\t\"title\": \"%s\",\n", movie.get("title"));
-            System.out.printf("\t\"image\": \"%s\",\n", movie.get("image"));
-            System.out.printf("\t\"imdbRating\": \"%s\"\n},\n", movie.get("imDbRating"));
+            var rating = Float.parseFloat(movie.get("imDbRating"));
+            System.out.println("Title: \u001b[1m" + movie.get("title") + "\u001b[m");
+            System.out.println("Image: \u001b[1m" + movie.get("image") + "\u001b[m");
+            System.out.println("\u001b[37;1m\u001b[45mRating: " + rating +"  \u001b[m");
+            for (int i = 0; i < Math.round(rating); i++) {
+                System.out.print("\u2B50");
+            }
+            System.out.println("\n");
         }
     }
 }
