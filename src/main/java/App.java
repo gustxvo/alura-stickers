@@ -1,32 +1,18 @@
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.cdimascio.dotenv.Dotenv;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class App {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        // Make an HTTP request to get the top 250 movies
-        // imDB api system is down
-//        final String apiAccessToken = Dotenv.load().get("API_ACCESS_TOKEN");
-//        String url = "https://imdb-api.com/en/API/MostPopularMovies/" + apiAccessToken;
-
-        // alternative url provided by an Alura instructor, Jacqueline Oliveira
-        final String url = Dotenv.load().get("API_ACCESS_URL");
+    public static void main(String[] args) throws Exception {
+        final String url = Dotenv.load().get("IMDB_TOP_MOVIES_ACCESS_URL");
 
         var client = HttpClient.newHttpClient();
         var uri = URI.create(url);
@@ -36,19 +22,24 @@ public class App {
 
         // Show data
         List<Map<String, String>> moviesList = new JsonParser().parse(response);
-       /* for (Map<String, String> movie : moviesList) {
-            var rating = Float.parseFloat(movie.get("imDbRating"));
-            System.out.println("Title: \u001b[1m" + movie.get("title") + "\u001b[m");
-            System.out.println("Image: \u001b[1m" + movie.get("image") + "\u001b[m");
-            System.out.println("\u001b[37;1m\u001b[45mRating: " + rating +"  \u001b[m");
-            for (int i = 0; i < Math.round(rating); i++) {
-                System.out.print("\u2B50");
-            }
-            System.out.println("\n");
-        }*/
+        var stickersGenerator = new StickersGenerator();
+
+        for (int i = 0; i < 10; i++) {
+            Map<String, String> movie = moviesList.get(i);
+
+            var title = movie.get("title");
+            var fileName = title + ".png";
+            var imageUrl = movie.get("image").replaceAll("(@+)(.*).jpg$", "$1.png");
+
+            InputStream inputStream = new URL(imageUrl).openStream();
+            stickersGenerator.create(inputStream, fileName);
+
+            System.out.println("Title: \u001b[1m" + title + "\u001b[m");
+            System.out.println("Image: \u001b[1m" + imageUrl + "\u001b[m\n");
+        }
 
         // Deserialize Json with Jackson
-        try {
+        /*try {
             ObjectMapper objectMapper = new ObjectMapper();
             Items items = objectMapper.readValue(response, Items.class);
             Movie[] movies = items.movies;
@@ -66,7 +57,7 @@ public class App {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
+        }*/
 
     }
 }
