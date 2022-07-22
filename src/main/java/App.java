@@ -1,17 +1,12 @@
 import common.HttpClient;
 import io.github.cdimascio.dotenv.Dotenv;
-import common.JsonParser;
 import model.Content;
 import model.ImdbContentExtractor;
 import model.NasaContentExtractor;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Map;
 
 public class App {
 

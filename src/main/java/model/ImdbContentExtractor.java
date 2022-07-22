@@ -1,12 +1,13 @@
 package model;
 
+import common.ContentExtractor;
 import common.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ImdbContentExtractor {
+public class ImdbContentExtractor implements ContentExtractor {
 
     public List<Content> extractContent(String json) {
         var parser = new JsonParser();
