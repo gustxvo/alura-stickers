@@ -2,7 +2,6 @@ import common.HttpClient;
 import io.github.cdimascio.dotenv.Dotenv;
 import model.Content;
 import model.ImdbContentExtractor;
-import model.NasaContentExtractor;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -26,12 +25,12 @@ public class App {
         for (int i = 0; i < 3; i++) {
             Content content = contentList.get(i);
 
-            InputStream inputStream = new URL(content.getImageUrl()).openStream();
-            var fileName = content.getTitle() + ".png";
+            InputStream inputStream = new URL(content.imageUrl()).openStream();
+            var fileName = content.title() + ".png";
             stickersGenerator.create(inputStream, fileName);
 
-            System.out.println("Title: \u001b[1m" + content.getTitle() + "\u001b[m");
-            System.out.println("Image: \u001b[1m" + content.getImageUrl() + "\u001b[m\n");
+            System.out.println("Title: \u001b[1m" + content.title() + "\u001b[m");
+            System.out.println("Image: \u001b[1m" + content.imageUrl() + "\u001b[m\n");
         }
 
         // Deserialize Json with Jackson
