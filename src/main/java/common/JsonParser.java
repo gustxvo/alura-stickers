@@ -1,3 +1,5 @@
+package common;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +16,7 @@ public class JsonParser {
 
         Matcher matcher = REGEX_ITEMS.matcher(json);
         if (!matcher.find()) {
-            throw new IllegalArgumentException("Items not found.");
+            throw new IllegalArgumentException("model.Items not found.");
         }
 
         String[] items = matcher.group(1).split("},\\{");
